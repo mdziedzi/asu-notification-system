@@ -3,6 +3,9 @@
 use Tk;
 use strict;
 
+my $COMMENT_ROW = 5;
+my $DELETE_ROW = $COMMENT_ROW + 1;
+
 my @matrix;
 
 
@@ -43,7 +46,7 @@ use Tk::Table;
 
 
 my $table_frame = $mw -> Frame() -> pack();
-my $table = $table_frame->Table(-columns => 5,
+my $table = $table_frame->Table(-columns => 6,
                                 -rows => 20,
                                 -fixedrows => 1,
                                 -scrollbars => 'oe',
@@ -60,23 +63,64 @@ my $tmp_label = $table->Label(-text => "OPIS", -width => 80, -relief =>'raised')
 $table->put(0, 4, $tmp_label);
 my $tmp_label = $table->Label(-text => "KOMENTARZ", -width => 40, -relief =>'raised');
 $table->put(0, 5, $tmp_label);
+my $tmp_label = $table->Label(-text => "USUN", -width => 8, -relief =>'raised');
+$table->put(0, 6, $tmp_label);
 
+sub comment() {
+#
+
+#
+}
+
+# fill table
 foreach my $row (1 .. 20)
 {
-  foreach my $col (1 .. 6)
-  {
-    my $tmp_label = $table->Label(-text => $matrix[$row - 1][$col - 1],
-                                  -padx => 2,
-                                  -anchor => 'w',
-                                  -background => 'white',
-                                  -relief => "groove");
-    $table->put($row, $col, $tmp_label);
-  }
+	my @list = ( "NOWY", "ANALIZA", "WYS. WIAD.", "ZREALIZOWANE", "ODRZUCONE" );
+	my $tmp_listbox = $table -> BrowseEntry (
+		-label => $matrix[$row - 1][0]
+	)->pack();
+	$tmp_listbox->insert('end', @list);
+	$table->put($row, 1, $tmp_listbox);
+
+	# with labels
+	foreach my $col (2 .. 5)
+	{
+		my $tmp_label = $table->Label (
+			-text => $matrix[$row - 1][$col - 1],
+			-padx => 2,
+			-anchor => 'w',
+			-background => 'white',
+			-relief => "groove"
+		);
+		$table->put($row, $col, $tmp_label);
+	}
+
+	# fill table with entry
+	my $tmp_entry = $table->Entry ( 
+		-textvariable => $matrix[$row -1][$COMMENT_ROW - 1],
+		-width => 40,
+		-background => 'white',
+		-relief => 'groove'
+	);
+	$table->put($row, $COMMENT_ROW, $tmp_entry);
+
+	# fill table with checkbutton
+	my $deleteval;
+	my $tmp_checkbutton= $table->Checkbutton (
+	   -variable=>\$deleteval,
+	   -indicatoron=>'1',
+	   -state=>'normal',
+	   -width => 1,
+	   -anchor=>'nw',
+	   -background => 'white',
+	   -relief => 'groove', -padx=>5
+	);
+	$table->put($row, $DELETE_ROW, $tmp_checkbutton);
 }
+
 $table->pack();
  
 my $button_frame = $mw->Frame( -borderwidth => 4 )->pack();
 $button_frame->Button(-text => "Exit", -command => sub {exit})->pack();
-
 
 MainLoop;
