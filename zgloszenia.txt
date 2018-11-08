@@ -1,0 +1,3 @@
+NOWY;facebook.com;marcin.d@gmail.com;Nie moge utworzyc posta na swoim profilu.;;
+WYS. WIAD.;facebook.com;k.nowak@gmail.com;Przy publikowaniu komentarza wyskakuje blad.;Wyslano wiadomosc  z pytaniem o szczegoly.;
+ANALIZA;youtube.com;kowalski123@wp.pl;Filmy, ktore odtwarzam sa bez dzwieku.;Problem powinien sie naprawic po restarcie serwerow.;

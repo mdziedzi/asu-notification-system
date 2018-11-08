@@ -7,6 +7,10 @@ my $COMMENT_ROW = 5;
 my $DELETE_ROW = $COMMENT_ROW + 1;
 
 my @matrix;
+my $nRows;
+my @be_array; #browseentry
+my @label_array;
+my @comment_array;
 
 
 	my $mw = MainWindow->new;
@@ -28,6 +32,8 @@ sub readFile() {
 		print "$row\n";
 	}
 
+	#print scalar(@{ $matrix[1] });
+	$nRows = scalar @matrix;
 	print "done\n";
 	print $matrix[0][0];
 	print $matrix[0][1];
@@ -72,12 +78,41 @@ sub comment() {
 #
 }
 
+sub saveChanges() {
+
+	my $filename = 'zgloszenia.txt';
+	open(my $fh, '>>', $filename) or die "Could not open file '$filename' $!";
+	unlink ('zgloszenia.txt') or die "Could not delete the file!\n";
+	open(my $fh, '>>', $filename) or die "Could not open file '$filename' $!";
+
+	foreach my $row (1 .. $nRows) {
+		print $fh $be_array[$row-1], ";";
+
+		foreach my $col(2 .. 4) {
+			#print $fh $matrix[$row - 1][$col - 1], ;
+			#my $tmp =  $table -> get($row, $col);
+
+			print $fh $label_array[$row-1][$col-1], ";";
+			
+			#print $tmp-> get(), ";\n";
+		}
+		print $fh $comment_array[$row-1], ";";
+#print $table ->get($row -1, 5) -> get();
+
+		print $fh "\n";
+		
+	}
+	
+}
+
 # fill table
-foreach my $row (1 .. 20)
+foreach my $row (1 .. $nRows)
 {
 	my @list = ( "NOWY", "ANALIZA", "WYS. WIAD.", "ZREALIZOWANE", "ODRZUCONE" );
+$be_array[$row -1] = $matrix[$row - 1][0];
 	my $tmp_listbox = $table -> BrowseEntry (
-		-label => $matrix[$row - 1][0]
+		-variable => \$be_array[$row -1],
+		#-label => $matrix[$row - 1][0]
 	)->pack();
 	$tmp_listbox->insert('end', @list);
 	$table->put($row, 1, $tmp_listbox);
@@ -85,8 +120,10 @@ foreach my $row (1 .. 20)
 	# with labels
 	foreach my $col (2 .. 5)
 	{
+		$label_array[$row -1][$col -1] = $matrix[$row - 1][$col - 1];
 		my $tmp_label = $table->Label (
 			-text => $matrix[$row - 1][$col - 1],
+			#-textvariable => \$label_array[$row -1],
 			-padx => 2,
 			-anchor => 'w',
 			-background => 'white',
@@ -96,8 +133,9 @@ foreach my $row (1 .. 20)
 	}
 
 	# fill table with entry
+	$comment_array[$row-1] = $matrix[$row -1][$COMMENT_ROW - 1];
 	my $tmp_entry = $table->Entry ( 
-		-textvariable => $matrix[$row -1][$COMMENT_ROW - 1],
+		-textvariable => \$comment_array[$row-1],
 		-width => 40,
 		-background => 'white',
 		-relief => 'groove'
@@ -121,6 +159,8 @@ foreach my $row (1 .. 20)
 $table->pack();
  
 my $button_frame = $mw->Frame( -borderwidth => 4 )->pack();
-$button_frame->Button(-text => "Exit", -command => sub {exit})->pack();
+$button_frame->Button(-text => "Zapisz zmiany", -command => \&saveChanges)->pack();
+
+
 
 MainLoop;
