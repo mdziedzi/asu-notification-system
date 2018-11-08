@@ -18,8 +18,6 @@ my $descriptionEntry = $mw->Entry(-background => 'black', -foreground => 'white'
 
 my $sendButton = $mw->Button(-text => "Send", -command =>\&send)->pack();
 
-#$mw->Button(-text => "Close", -command =>sub{exit})->pack();
-
 sub send() {
 	print "*sended*\n";
 	$mw->Label(-text => "Dziekujemy za zgloszenie")->pack();
@@ -36,15 +34,10 @@ sub send() {
 sub writeToFile() {
 	my $filename = 'zgloszenia.txt';
 	open(my $fh, '>>', $filename) or die "Could not open file '$filename' $!";
-
 	print $fh "NOWY", ";";
-
 	print $fh $webPageEntry -> get(), ";";
-
 	print $fh $addressEntry -> get(), ";";
-
 	print $fh $descriptionEntry -> get(), ";";
-
 	print $fh "\n";
 	close $fh;
 	print "done\n";
